@@ -1,3 +1,4 @@
 # KarYo
 
-New
+![Karyotyping](/images/logo.jpg?raw=true)
+
