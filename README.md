@@ -47,8 +47,8 @@ pip install -r requirements.txt
 
 
 ## Contributors
-[Leeaa Nair](https://github.com/leeaanair)\
-[Nishant Nimbalkar](https://github.com/Nishant98)\
-[Sarah Solkar](https://github.com/SarahSolkar)
+- [Leeaa Nair](https://github.com/leeaanair)\
+- [Nishant Nimbalkar](https://github.com/Nishant98)\
+- [Sarah Solkar](https://github.com/SarahSolkar)
 
 
