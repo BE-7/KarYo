@@ -1,20 +1,4 @@
 ######## Image Object Detection Using Tensorflow-trained Classifier #########
-#
-# Author: Evan Juras
-# Date: 1/15/18
-# Description: 
-# This program uses a TensorFlow-trained classifier to perform object detection.
-# It loads the classifier uses it to perform object detection on an image.
-# It draws boxes and scores around the objects of interest in the image.
-
-## Some of the code is copied from Google's example at
-## https://github.com/tensorflow/models/blob/master/research/object_detection/object_detection_tutorial.ipynb
-
-## and some is copied from Dat Tran's example at
-## https://github.com/datitran/object_detector_app/blob/master/object_detection_app.py
-
-## but I changed it to make it more understandable to me.
-
 # Import packages
 import os
 import cv2
@@ -24,21 +8,11 @@ import sys
 # This is needed since the notebook is stored in the object_detection folder.
 sys.path.append("..")
 
-
 # Import utilites
 from utils import label_map_util
 from utils import visualization_utils as vis_util
 
-
-
-def detection(imagePath):
-	print("works")
-
-	# name = "images/validation"
-	# filenames= os.listdir(name)
-	# print(filenames)
-	lst1=[]
-	lst2=[]
+def detection(imagePath, target):
 
 	# Name of the directory containing the object detection module we're using
 	MODEL_NAME = 'inference_graph'
@@ -46,9 +20,7 @@ def detection(imagePath):
 
 	# Grab path to current working directory
 	CWD_PATH = os.getcwd()
-	print("#####################")
-	print(CWD_PATH)
-	CWD_PATH = "G:/Karyotyping/RCNN_object_detection"
+	CWD_PATH = CWD_PATH+"/RCNN_object_detection"
 	# Path to frozen detection graph .pb file, which contains the model that is used
 	# for object detection.
 	PATH_TO_CKPT = os.path.join(CWD_PATH,MODEL_NAME,'frozen_inference_graph.pb')
@@ -57,7 +29,6 @@ def detection(imagePath):
 	PATH_TO_LABELS = os.path.join(CWD_PATH,'training','labelmap.pbtxt')
 
 	# Path to image
-	#PATH_TO_IMAGE = os.path.join(CWD_PATH,IMAGE_NAME)
 	PATH_TO_IMAGE = imagePath
 	# Number of classes the object detector can identify
 	NUM_CLASSES = 6
@@ -98,7 +69,8 @@ def detection(imagePath):
 
 	# Number of objects detected
 	num_detections = detection_graph.get_tensor_by_name('num_detections:0')
-	print("number of detections are ",num_detections)
+	#print("number of detections are ",num_detections)
+
 	# Load image using OpenCV and
 	# expand image dimensions to have shape: [1, None, None, 3]
 	# i.e. a single-column array, where each item in the column has the pixel RGB value
@@ -110,20 +82,6 @@ def detection(imagePath):
 	    [detection_boxes, detection_scores, detection_classes, num_detections],
 	    feed_dict={image_tensor: image_expanded})
 
-	print("works fine")
-
-	####
-	# a = IMAGE_NAME.split("/")
-	# b = a[3].split(".")
-	# print(a)
-	# print(b)
-	temp = imagePath.split("/")
-	temp = temp[4].split(".")
-	b = temp[0]
-	print("#######")
-	print(b)
-	p = "G:/Karyotyping/chromosome_data/"
-
 	coordinates = vis_util.return_coordinates(
 	                        image,
 	                        np.squeeze(boxes),
@@ -134,41 +92,23 @@ def detection(imagePath):
 	                        line_thickness=2,
 	                        min_score_thresh=0.60)
 
-	# filename_string = "Test"
-	# textfile = open("json/"+filename_string+".json", "a")
-	# textfile.write(json.dumps(coordinates))
-	# textfile.write("\n")
-
 	z = 1
-	area = []
-	lst1.append(len(coordinates))
-	#lst2.append({i:len(coordinates)})
 
 	# if not os.path.exists("images/validation_result/"+b):
 	# 	os.mkdir("images/validation_result/"+b)
 
-	if not os.path.exists(p+b+"/cropped"):
-		os.mkdir(p+b+"/cropped")
+	if not os.path.exists(target+"/cropped"):
+		os.mkdir(target+"/cropped")
 
 	for coordinate in coordinates:
 	            (y1, y2, x1, x2, acc) = coordinate
 	            height = y2-y1
 	            width = x2-x1
-	            a = height*width
-	            area.append(a)
 	            crop = image[y1:y1+height, x1:x1+width]
-	            cv2.imwrite(p+b+"/cropped/"+str(z)+".jpg",crop)
-	            #cv2.imwrite("images/cropped/"+str(a)+".jpg",crop)
+	            cv2.imwrite(target+"/cropped/"+str(z)+".jpg",crop)
 	            z=z+1 
-	#print(area)
 
-	#####
-
-
-
-	#####
-
-	# Draw the results of the detection (aka 'visulaize the results')
+	# Draw the results of the detection (aka 'visualize the results')
 
 	vis_util.visualize_boxes_and_labels_on_image_array(
 	    image,
@@ -181,29 +121,11 @@ def detection(imagePath):
 	    min_score_thresh=0.60)
 
 	# All the results have been drawn on image. Now display the image.
-	#cv2.imshow('Object detector', image)
 
-	# a = IMAGE_NAME.split("/")
-	# b = a[3].split(".")
+
 	temp = imagePath.split("/")
-	temp2 = temp[4].split(".")
-	b = temp2[0]
-	# print(a[3])
-	# print(b)
-	# print(b[1])
-	# if not os.path.exists("images/validation_result/"+b):
-	# 	os.mkdir("images/validation_result/"+b[0])
-	# 	cv2.imwrite("./images/validation_result/"+b[0]+"/"+a[3],image)
-	cv2.imwrite(p+b+"/"+"detected_"+temp[4],image)
-	# Press any key to close the image
-	#cv2.waitKey(0)
+	cv2.imwrite(target+"/"+"detected_"+temp[-1],image)
 
-# 	# Clean up
-# 	cv2.destroyAllWindows()
-# print(lst1)
-# print(lst2)
-# l = len(lst1)
-# l = l*46
-# acc = (sum(lst1)/l)*100
-# print(acc)
-# detection("G:/Karyotyping/chromosome_data/original 32/original 32.jpg")
+
+# Uncomment the below line to test the module independently
+# detection("G:/Karyotyping/chromosome_data/original 32/original 32.jpg","G:/Karyotyping/chromosome_data/original 32")
