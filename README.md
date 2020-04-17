@@ -34,6 +34,17 @@ pip install -r requirements.txt
 ```
  python frame.py
  ```
+ 
+ ## How to use?
+- Open an image that has to be analysed from the menu bar.
+- Click on Detect button to detect individual chromosome in the input image.
+- Click on Process button to determine the length of individual chromosome.
+- Use various options available in View menu to view intermediate steps of length determination.
+- Click on Classify button to pass the individual chromosome for classiﬁcation.
+- Click on Edit button to use the interactive drag and drop feature for arrangement of classiﬁed chromosomes.
+- Click on Reset button to undo all the changes.
+- Click on Generate Karyotype button to display the ﬁnal karyotype.
+
 
 ## Contributors
 [Leeaa Nair](https://github.com/leeaanair)\
