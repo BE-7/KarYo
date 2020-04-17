@@ -10,8 +10,6 @@
 - Since, manual karyotyping is a labor intensive and a time consuming task, developing automatic computer-assisted karyotyping system is required. 
 - The proposed Automated Karyotyping System  detects chromosomes from the microscopic image with the help of Faster RCNN with inception v2 model, 
 classiﬁes them with the help of inception v3 model and with cytogenetic parameter like length of chromosome.
-
- [//]: <> ![Karyotype](/images/karyotype39.png?raw=true)
  
 <p align="center"> 
 <img alt="Karyotype" src="/images/karyotype39.png?raw=true">
