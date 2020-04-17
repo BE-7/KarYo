@@ -20,7 +20,7 @@ classiﬁes them with the help of inception v3 model and with cytogenetic parame
 ![System Architecture](/images/schematic.png?raw=true)
 
 <p align="center"> 
-<img alt="System Architecture" src="/images/schematic.png?raw=true" width="48">
+<img alt="System Architecture" src="/images/schematic.png?raw=true" width="700">
 </p>
 
 ## Prerequisites
