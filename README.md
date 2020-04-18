@@ -2,17 +2,18 @@
 
 ![Logo](/images/logo.png?raw=true)
 
-## An Automated Karytyping System using Deep Learning and Image Processing
+## An Automated Karyotyping System using Deep Learning and Image Processing
 
 ## Details
 - Karyotyping is a process of pairing and ordering human chromosomes depending on size, centromere position, and banding pattern.
 - It is used to analyse human chromosomes for various genetic disorders  especially during prenatal screenings.
-- Since, manual karyotyping is a labor intensive and a time consuming task, developing automatic computer-assisted karyotyping system is required. 
+- Since manual karyotyping is a labor intensive and a time consuming task, we have developed an automatic computer-assisted karyotyping system. 
 - The proposed Automated Karyotyping System  detects chromosomes from the microscopic image with the help of Faster RCNN with inception v2 model, 
-classiﬁes them with the help of inception v3 model and with cytogenetic parameter like length of chromosome.
+classiﬁes them with the help of inception v3 model and with cytogenetic parameter i.e length of chromosome.
  
 <p align="center"> 
 <img alt="Karyotype" src="/images/karyotype39.png?raw=true">
+<p align="center">Karyotype Image</p>
 </p>
 
 ## System Architecture
