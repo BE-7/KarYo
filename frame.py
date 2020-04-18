@@ -89,7 +89,7 @@ class DragWindow(QWidget):
         self.generateButton = QPushButton("Generate Karyotype")
         self.generateButton.clicked.connect(self.generate)
         self.resetButton = QPushButton("Reset")
-        self.resetButton.clicked.connect(partial(self.generateList,lst,predicted,unpredicted))
+        self.resetButton.clicked.connect(partial(self.generateList,lst,TSCM_predicted,TSCM_unpredicted))
         self.backButton = QPushButton("Back")
         self.backButton.clicked.connect(self.back)
 
