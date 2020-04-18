@@ -1,0 +1,8 @@
+chr 10
+chr 8
+chr 9
+chr 6
+chr 12
+chr 11
+chr x
+chr 7

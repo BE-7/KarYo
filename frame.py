@@ -25,15 +25,15 @@ from Object_detection_image import detection
 sys.path.insert(1, cwd+'/Classifier/v3')
 from classify import classify
 
-# sys.path.insert(1, cwd+'/Classifier/Group Classifier')
-# from TSCM_classifier import TSCM_classifier
+sys.path.insert(1, cwd+'/Classifier/Group Classifier')
+from TSCM_classifier import TSCM_classifier
 #Default Image to be Processed
 imagePath = cwd+"/chromosome_data/original 32/original 32.jpg"
 
 #Background Image
 currentImage = cwd+"/images/white_bg.jpg"
 
-target = ""
+target = cwd+"/chromosome_data/original 32/"
 
 #To display the Generated Karyotype
 class Window2(QMainWindow):              
@@ -64,7 +64,7 @@ class Window2(QMainWindow):
         self.setFixedSize(pixmap.width(), pixmap.height())
         self.show()        
 
-
+# flag = 1
 #Interactive Drag and Drop Space to arrange the chromosomes
 class DragWindow(QWidget):
     def __init__(self):
@@ -72,7 +72,8 @@ class DragWindow(QWidget):
         lst = ['chr_1', 'chr_2', 'chr_3', 'chr_4', 'chr_5', 'chr_6', 'chr_7', 'chr_8', 'chr_9', 'chr_10', 'chr_11', 'chr_12', 'chr_13', 'chr_14', 'chr_15', 'chr_16', 'chr_17', 'chr_18', 'chr_19', 'chr_20', 'chr_21', 'chr_22', 'chr_x', 'chr_y']
         #Predicted Dict
         #predicted = {'1.jpg': 'chr_1', '11.jpg': 'chr_4', '12.jpg': 'chr_8', '13.jpg': 'chr_x', '15.jpg': 'chr_8', '16.jpg': 'chr_4', '17.jpg': 'chr_16', '18.jpg': 'chr_15', '19.jpg': 'chr_16', '22.jpg': 'chr_16', '23.jpg': 'chr_15', '24.jpg': 'chr_16', '25.jpg': 'chr_4', '27.jpg': 'chr_1', '31.jpg': 'chr_14', '34.jpg': 'chr_13', '35.jpg': 'chr_20', '36.jpg': 'chr_20', '37.jpg': 'chr_13', '38.jpg': 'chr_16', '42.jpg': 'chr_x', '44.jpg': 'chr_16', '45.jpg': 'chr_16', '46.jpg': 'chr_19', '5.jpg': 'chr_17', '6.jpg': 'chr_16'}
-        
+        # global flag
+
         #Unpredicted Dict
         #unpredicted = {'10.jpg': 'chr_5', '14.jpg': 'chr_16', '2.jpg': 'chr_3', '20.jpg': 'chr_14', '21.jpg': 'chr_2', '26.jpg': 'chr_20', '28.jpg': 'chr_1', '29.jpg': 'chr_6', '3.jpg': 'chr_4', '30.jpg': 'chr_15', '32.jpg': 'chr_x', '33.jpg': 'chr_22', '39.jpg': 'chr_17', '4.jpg': 'chr_6', '40.jpg': 'chr_19', '41.jpg': 'chr_14', '43.jpg': 'chr_21', '7.jpg': 'chr_9', '8.jpg': 'chr_16', '9.jpg': 'chr_9'}
 
@@ -80,6 +81,8 @@ class DragWindow(QWidget):
         global unpredicted
         global length_dict
         global imagePath
+        global TSCM_predicted
+        global TSCM_unpredicted
 
         self.myListWidget1 = QListWidget()
         self.myListWidget2 = QListWidget()
@@ -120,9 +123,11 @@ class DragWindow(QWidget):
         self.hbox.addWidget(self.backButton)
         self.vbox.addLayout(self.myLayout)
         self.vbox.addLayout(self.hbox)
-        print(lst)
-        self.generateList(lst,predicted,unpredicted)
-
+        # print(lst)
+        # if(flag == 0):
+        # self.generateList(lst,predicted,unpredicted)
+        # else:
+        self.generateList(lst,TSCM_predicted,TSCM_unpredicted)
         #wid = QWidget(self)
         #self.setCentralWidget(wid)
         #wid.setLayout(self.vbox)
@@ -386,6 +391,16 @@ class Window(QWidget):
         self.processButton.setObjectName("processButton")
 
 
+        # self.classifyButton = QtWidgets.QPushButton(self)
+        # self.classifyButton.setGeometry(QtCore.QRect(40, 350, 131, 31))
+        # font = QtGui.QFont()
+        # font.setFamily("Segoe UI Historic")
+        # font.setPointSize(8)
+        # self.classifyButton.setFont(font)
+        # self.classifyButton.setDefault(False)
+        # self.classifyButton.setFlat(False)
+        # self.classifyButton.setObjectName("classifyButton")
+
         self.viewButton = QtWidgets.QPushButton(self)
         self.viewButton.setGeometry(QtCore.QRect(40, 350, 131, 31))
         font = QtGui.QFont()
@@ -395,6 +410,28 @@ class Window(QWidget):
         self.viewButton.setDefault(False)
         self.viewButton.setFlat(False)
         self.viewButton.setObjectName("viewButton")
+
+
+        # self.viewTSCMButton = QtWidgets.QPushButton(self)
+        # self.viewTSCMButton.setGeometry(QtCore.QRect(40, 350, 131, 31))
+        # font = QtGui.QFont()
+        # font.setFamily("Segoe UI Historic")
+        # font.setPointSize(8)
+        # self.viewTSCMButton.setFont(font)
+        # self.viewTSCMButton.setDefault(False)
+        # self.viewTSCMButton.setFlat(False)
+        # self.viewTSCMButton.setObjectName("viewButton")
+
+
+        # self.dragTSCMButton = QtWidgets.QPushButton(self)
+        # self.dragTSCMButton.setGeometry(QtCore.QRect(40, 350, 131, 31))
+        # font = QtGui.QFont()
+        # font.setFamily("Segoe UI Historic")
+        # font.setPointSize(8)
+        # self.dragTSCMButton.setFont(font)
+        # self.dragTSCMButton.setDefault(False)
+        # self.dragTSCMButton.setFlat(False)
+        # self.dragTSCMButton.setObjectName("dragButton")
 
         #image in the right
         # self.frameResult = QtWidgets.QFrame(self)
@@ -427,6 +464,10 @@ class Window(QWidget):
         self.vbox.addWidget(self.karyotypeButton)
         self.vbox.addWidget(self.dragButton)
         self.vbox.addWidget(self.viewButton)
+        # self.vbox.addWidget(self.classifyButton)
+        # self.vbox.addWidget(self.dragTSCMButton)
+        # self.vbox.addWidget(self.viewTSCMButton)
+        
 
         self.hbox.addLayout(self.vbox)
         #self.hbox.addWidget(self.side_frame)
@@ -478,8 +519,11 @@ class Window(QWidget):
         self.originalButton.clicked.connect(self.detect)
         self.dragButton.clicked.connect(self.openWindow)
         self.processButton.clicked.connect(self.process)
-        self.karyotypeButton.clicked.connect(self.classify)
+        self.karyotypeButton.clicked.connect(self.TSCMclassifier)
+        # self.classifyButton.clicked.connect(self.TSCMclassifier)
         self.viewButton.clicked.connect(self.view)
+        # self.viewTSCMButton.clicked.connect(self.view)
+        # self.dragTSCMButton.clicked.connect(partial(self.openWindow,1))
 
         #display_preprocessed(self,"vertical")
 
@@ -571,25 +615,42 @@ class Window(QWidget):
         x = msg.exec_()
         
     #To classify the chromosomes
-    def classify(self):
+    # def classify(self):
+
+    #     global target
+    #     global predicted
+    #     global unpredicted
+    #     pred,unpred = classify(target)
+    #     print(pred)
+    #     print(unpred)
+    #     predicted = pred
+    #     unpredicted = unpred
+    #     msg = QMessageBox()
+    #     msg.setWindowTitle("Information")
+    #     msg.setText("Successfully Classified")
+    #     msg.setIcon(QMessageBox.Information)
+    #     #msg.buttonClicked.connect(self.showKaryotype)
+    #     x = msg.exec_()
+        
+    def TSCMclassifier(self):
 
         global target
-        global predicted
-        global unpredicted
-        pred,unpred = classify(target)
-        print(pred)
-        print(unpred)
-        predicted = pred
-        unpredicted = unpred
+        global TSCM_predicted
+        global TSCM_unpredicted
+        pred,unpred = TSCM_classifier(target)
+        # print(pred)
+        # print(unpred)
+        TSCM_predicted = pred
+        TSCM_unpredicted = unpred
         msg = QMessageBox()
         msg.setWindowTitle("Information")
         msg.setText("Successfully Classified")
         msg.setIcon(QMessageBox.Information)
         #msg.buttonClicked.connect(self.showKaryotype)
         x = msg.exec_()
-        
 
     def openWindow(self):
+
         self.w = DragWindow()
         self.w.show()
         #self.window = QtWidgets.QMainWindow()
@@ -608,6 +669,9 @@ class Window(QWidget):
         self.dragButton.setText(_translate("MainWindow", "Edit"))
         self.processButton.setText(_translate("MainWindow", "Process"))
         self.viewButton.setText(_translate("MainWindow", "View"))
+        # self.classifyButton.setText(_translate("MainWindow", "TSCM Classifier"))
+        # self.dragTSCMButton.setText(_translate("MainWindow", "Edit TSCM Output"))
+        # self.viewTSCMButton.setText(_translate("MainWindow", "View TSCM Output"))
 
 
         self.path.setText(_translate("MainWindow", "Path: "))

@@ -23,6 +23,7 @@ def classify(target):
 	print(cwd)
 	#augmented v1
 	#threshold = {'chr_1': 0.5806173143539837, 'chr_10': 0.34987123754214156, 'chr_11': 0.42290421320206445, 'chr_12': 0.3792356686467786, 'chr_13': 0.41879855452336856, 'chr_14': 0.43299127109973123, 'chr_15': 0.40641172406105125, 'chr_16': 0.4172314604484411, 'chr_17': 0.3973610919157538, 'chr_18': 0.422630432035393, 'chr_19': 0.5325401555410171, 'chr_2': 0.47840787656605244, 'chr_20': 0.4519088038660843, 'chr_21': 0.692927679962161, 'chr_22': 0.541962638970732, 'chr_3': 0.4333399000412707, 'chr_4': 0.4188196397672343, 'chr_5': 0.39296304677246197, 'chr_6': 0.37549690291575505, 'chr_7': 0.377889743914048, 'chr_8': 0.34770567460042057, 'chr_9': 0.3895080423768545, 'chr_x': 0.3659903903152476, 'chr_y': 0.7586935225408524}
+	tf.reset_default_graph()
 	with tf.gfile.FastGFile(cwd+"/Classifier/v3/tf_files/retrained_graph.pb", 'rb') as f:
 		graph_def = tf.GraphDef()
 		graph_def.ParseFromString(f.read())
@@ -31,6 +32,7 @@ def classify(target):
 	predicted = {}
 	unpredicted = {}
 	count = 0
+	
 
 	with tf.Session() as sess:
 		for file in filename:
