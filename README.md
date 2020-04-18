@@ -11,9 +11,10 @@
 - The proposed Automated Karyotyping System  detects chromosomes from the microscopic image with the help of Faster RCNN with inception v2 model, 
 classiﬁes them with the help of inception v3 model and with cytogenetic parameter i.e length of chromosome.
  
+ 
 <p align="center"> 
 <img alt="Karyotype" src="/images/karyotype39.png?raw=true">
-<p align="center">Karyotype Image</p>
+<p align="center" >Fig: Karyotype Image</p>
 </p>
 
 ## System Architecture
