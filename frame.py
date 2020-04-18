@@ -39,9 +39,9 @@ class Window2(QMainWindow):
         super().__init__()
         self.setWindowTitle("Generated Karyotype")
         
-        global imagePath
-        t = imagePath.split("/")
-        imageDir = t[0]+"/"+t[1]+"/"+t[2]+"/"+t[3]+"/karyotype.jpg"
+        global target
+        # t = imagePath.split("/")
+        imageDir = target+"/karyotype.jpg"
         #label = QLabel(self)
         # imagePath = "G:/Karyotyping/Classifier/UI/karyotype.jpg"
         # pixmap = QPixmap(imagePath)
@@ -155,7 +155,8 @@ class DragWindow(QWidget):
     #   mydialog.exec()
 
     def generate(self):
-        global imagePath
+        # global imagePath
+        global target
         msg = QMessageBox()
         msg.setWindowTitle("Information")
         msg.setText("Successfully Generated")
@@ -180,7 +181,7 @@ class DragWindow(QWidget):
           print(t)
           order.append(t[0]+".jpg")
         print(order)
-        row(order,imagePath)
+        row(order,target)
         x = msg.exec_()
 
 
@@ -200,6 +201,7 @@ class DragWindow(QWidget):
 
     def generateList(self,lst,predicted,unpredicted):
         #global lst
+        global target
         self.myListWidget1.clear()
         self.myListWidget2.clear()
         print(predicted)
@@ -224,8 +226,8 @@ class DragWindow(QWidget):
         # length = [('43.jpg', 3.236067977499777), ('33.jpg', 7.071067811865483), ('41.jpg', 10.964724878577353), ('46.jpg', 12.034999410188222), ('31.jpg', 12.42723722081092), ('36.jpg', 13.17881648958412), ('26.jpg', 14.587319925722593), ('20.jpg', 14.882824613967331), ('34.jpg', 17.45929849618171), ('45.jpg', 17.990176050687683), ('23.jpg', 18.30835512550115), ('17.jpg', 18.56110321786805), ('22.jpg', 18.637345388044217), ('38.jpg', 18.734204403865945), ('14.jpg', 20.2921628262268), ('35.jpg', 21.49734604545561), ('40.jpg', 21.934712330176136), ('37.jpg', 22.624561243389792), ('30.jpg', 22.87916646860505), ('5.jpg', 24.42346214554805), ('44.jpg', 27.695265004878895), ('9.jpg', 27.94202675370851), ('39.jpg', 28.432097519840912), ('18.jpg', 29.532901616576865), ('6.jpg', 31.29894847906794), ('19.jpg', 33.24958456876382), ('12.jpg', 33.4073821587324), ('29.jpg', 33.90908243369089), ('28.jpg', 37.54283981688735), ('32.jpg', 39.49442544603043), ('24.jpg', 39.63496546878376), ('25.jpg', 41.44939319582502), ('7.jpg', 42.836499520552934), ('8.jpg', 42.84934761355323), ('11.jpg', 44.0752049627969), ('4.jpg', 44.338105647958194), ('13.jpg', 44.53810290119516), ('16.jpg', 47.44687380130529), ('3.jpg', 49.38592789078901), ('10.jpg', 49.53932107566584), ('2.jpg', 49.72443909046185), ('15.jpg', 53.7317540349579), ('21.jpg', 65.05739786074896), ('27.jpg', 67.50474637686915), ('1.jpg', 73.56442943155982), ('42.jpg', 104.4383612537255)]
 
 
-        t = imagePath.split("/")
-        rootdir = t[0]+"/"+t[1]+"/"+t[2]+"/"+t[3]+"/vertical"
+        # t = imagePath.split("/")
+        rootdir = target+"/Resized/vertical"
         #rootdir = "G:/Karyotyping/Classifier/images/resized"
         count = 0
         for subdir, dirs, files in os.walk(rootdir):
@@ -253,19 +255,6 @@ class DragWindow(QWidget):
         print(itemsTextList)
         
 
-    # def CreateMenu(self):
-    #   menu = self.menuBar()
-    #   generateMenu = menu.addMenu("Generate Karyotype")
-
-# App = QApplication(sys.argv)
-# window = DragWindow()
-# sys.exit(App.exec())
-
-
-
-
-
-
 
 predicted = {}
 unpredicted = {}
@@ -275,7 +264,6 @@ class Window(QWidget):
     def __init__(self):
         super().__init__()
         self.setFixedSize(1366,678)
-
         #self.setMaximumSize(1000, 1000)
         #self.resize(700, 494)
 
@@ -285,10 +273,7 @@ class Window(QWidget):
         self.vbox1 = QVBoxLayout()
 
         self.setWindowTitle('Karyotyping')
-        #self.setLayout(self.vbox)
 
-        #stylesheet
-        #self.setStyleSheet(open("style.qss","r").read())
         self.setWindowFlags(QtCore.Qt.Window)
 
         #created menu
@@ -533,13 +518,11 @@ class Window(QWidget):
     #To open an image    
     def open_file(self):
         name = QFileDialog.getOpenFileName(self,"Open Image", './chromosome_data', "Image files (*.jpg *.png *.bmp)")
-        #print("name ",name)
         global imagePath
         global currentImage
         global target
 
         imagePath = name[0]
-        #print(imagePath)
         currentImage = imagePath
         pixmap = QtGui.QPixmap(imagePath)
         temp = imagePath.split("/")
@@ -553,22 +536,13 @@ class Window(QWidget):
         self.resize(pixmap.width(), pixmap.height())
         self.path.setText("Path: "+imagePath)
 
-
+    #To view the intermediate steps of pre-processing and length determination
     def display_preprocessed(self,folder):
-        global imagePath
-        # print("pre-processing",imagePath)
-        # preprocessing.preprocessing(imagePath)
-        # self.result.setPixmap(QtGui.QPixmap("images/pre.jpg"))
-        # # imagePath = "images/pre.jpg"
-        # # print(imagePath)
-        # self.log_details.setText("Pre-preprocessing was successfull")
-        # self.path.setText(imagePath)
+        
+        global target
         self.myListWidget_right.clear()
-        t = imagePath.split("/")
-        rootdir = t[0]+"/"+t[1]+"/"+t[2]+"/"+t[3]+"/"+folder
+        rootdir = target+"/Resized/"+folder
         self.path.setText("Path: "+rootdir)
-
-        #rootdir = "G:/Karyotyping/Classifier/images/resized"
         count = 0
         for subdir, dirs, files in os.walk(rootdir):
             files.sort(key=lambda x:(int(x[:-4]), int(x[:-4])))
@@ -578,20 +552,8 @@ class Window(QWidget):
                 t = file.split(".")
                 # if file in predicted:
                 l1 = QListWidgetItem(QIcon(a), file)
-                #     l1.setBackground(QtGui.QColor("#008000"))
-
-                #     #l1.setTextAlignment(0) 
-                # else:
-                #     l1 = QListWidgetItem(QIcon(a), t[0]+"."+unpredicted[file])
-                #     l1.setBackground(QtGui.QColor("#FF0000"))
-                #     #l1.setTextAlignment(0)
-                
-                # l1.setToolTip(str(length_dict[file]))
-                #lst.append(file+":"+l1.data(0))        
                 count+=1
                 self.myListWidget_right.insertItem(count, l1)
-
-
         itemsTextList =  [str(self.myListWidget_right.item(i).text()) for i in range(self.myListWidget_right.count())]
         print(itemsTextList)
 
@@ -614,7 +576,7 @@ class Window(QWidget):
         global imagePath
         global target
         global length_dict
-        print("works")
+        # print("works")
         len_dict = pre_process(target)
         length_dict = len_dict
         msg = QMessageBox()
@@ -623,13 +585,13 @@ class Window(QWidget):
         msg.setIcon(QMessageBox.Information)
         x = msg.exec_()
         
-
+    #To classify the chromosomes
     def classify(self):
-        global	imagePath
+
+        global target
         global predicted
         global unpredicted
-        pred,unpred = classify(imagePath)
-        print("=-===-")
+        pred,unpred = classify(target)
         print(pred)
         print(unpred)
         predicted = pred
@@ -688,17 +650,13 @@ class Window(QWidget):
 
         self.actionRotated.setText(_translate("MainWindow", "Rotated"))
 
-
         self.show()
 
 App = QApplication(sys.argv)
-splash_pix = QtGui.QPixmap('images/splash.png')
-
 width = QDesktopWidget().screenGeometry(-1).width()
 height = QDesktopWidget().screenGeometry(-1).height()
 print(width)
 print(height)
-
 splash_pix = QtGui.QPixmap('images/splash.png')
 splash_pix=splash_pix.scaled(width, height)
 splash = QtWidgets.QSplashScreen(splash_pix, Qt.WindowStaysOnTopHint)
@@ -716,7 +674,6 @@ for i in range(1, 11):
        App.processEvents()
 
 time.sleep(1)
-
 window = Window() 
 window.show()
 splash.finish(window)
