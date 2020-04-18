@@ -17,14 +17,16 @@ from row import row
 from index import pre_process
 from resize import resize
 
-#Importing from RCNN_object_detection
-sys.path.insert(1, cwd+'/RCNN_object_detection')
+#Importing from object_detection
+sys.path.insert(1, cwd+'/object_detection')
 from Object_detection_image import detection
 
 #Importing from Classifier
 sys.path.insert(1, cwd+'/Classifier/v3')
 from classify import classify
 
+sys.path.insert(1, cwd+'/Classifier/Group Classifier')
+from TSCM_classifier import TSCM_classifier
 #Default Image to be Processed
 imagePath = cwd+"/chromosome_data/original 32/original 32.jpg"
 
@@ -62,25 +64,6 @@ class Window2(QMainWindow):
         self.setFixedSize(pixmap.width(), pixmap.height())
         self.show()        
 
-##to be uncommented
-        # self.setWindowTitle("Generated Karyotype")
-        # global imagePath
-        # t = imagePath.split("/")
-        # imageName = t[-1]
-        # folderName = imageName.split(".")
-        # folderName = folderName[0]
-        # os.mkdir(cwd+"/chromosome_data/"+folderName)
-        # imageDir = cwd+"/chromosome_data/"+folderName+"/karyotype.jpg"
-        # self.central_widget = QWidget()               
-        # self.setCentralWidget(self.central_widget)    
-        # lay = QVBoxLayout(self.central_widget)
-        # label = QLabel(self)
-        # pixmap = QPixmap(imageDir)
-        # label.setPixmap(pixmap)
-        # self.resize(pixmap.width(), pixmap.height())
-        # lay.addWidget(label)
-        # self.setFixedSize(pixmap.width(), pixmap.height())
-        # self.show()
 
 #Interactive Drag and Drop Space to arrange the chromosomes
 class DragWindow(QWidget):
@@ -259,6 +242,8 @@ class DragWindow(QWidget):
 predicted = {}
 unpredicted = {}
 length_dict = {}
+TSCM_predicted = {}
+TSCM_unpredicted = {}
 
 class Window(QWidget):
     def __init__(self):
@@ -401,6 +386,15 @@ class Window(QWidget):
         self.processButton.setObjectName("processButton")
 
 
+        self.classifyButton = QtWidgets.QPushButton(self)
+        self.classifyButton.setGeometry(QtCore.QRect(40, 350, 131, 31))
+        font = QtGui.QFont()
+        font.setFamily("Segoe UI Historic")
+        font.setPointSize(8)
+        self.classifyButton.setFont(font)
+        self.classifyButton.setDefault(False)
+        self.classifyButton.setFlat(False)
+        self.classifyButton.setObjectName("classifyButton")
 
         self.viewButton = QtWidgets.QPushButton(self)
         self.viewButton.setGeometry(QtCore.QRect(40, 350, 131, 31))
@@ -442,6 +436,7 @@ class Window(QWidget):
         self.vbox.addWidget(self.processButton)
         self.vbox.addWidget(self.karyotypeButton)
         self.vbox.addWidget(self.dragButton)
+        self.vbox.addWidget(self.classifyButton)
         self.vbox.addWidget(self.viewButton)
 
         self.hbox.addLayout(self.vbox)
@@ -495,6 +490,7 @@ class Window(QWidget):
         self.dragButton.clicked.connect(self.openWindow)
         self.processButton.clicked.connect(self.process)
         self.karyotypeButton.clicked.connect(self.classify)
+        self.classifyButton.clicked.connect(self.TSCMclassifier)
         self.viewButton.clicked.connect(self.view)
 
         #display_preprocessed(self,"vertical")
@@ -507,9 +503,10 @@ class Window(QWidget):
 
     def view(self):
         global imagePath
+        global target
         self.w = Window2()
-        t = imagePath.split("/")
-        rootdir = t[0]+"/"+t[1]+"/"+t[2]+"/"+t[3]+"/karyotype.jpg"
+        #t = imagePath.split("/")
+        rootdir = target+"/karyotype.jpg"
         self.path.setText("Path: "+rootdir)
 
         self.w.show()
@@ -603,6 +600,22 @@ class Window(QWidget):
         #msg.buttonClicked.connect(self.showKaryotype)
         x = msg.exec_()
         
+    def TSCMclassifier(self):
+
+        global target
+        global TSCM_predicted
+        global TSCM_unpredicted
+        pred,unpred = TSCM_classifier(target)
+        print(pred)
+        print(unpred)
+        TSCM_predicted = pred
+        TSCM_unpredicted = unpred
+        msg = QMessageBox()
+        msg.setWindowTitle("Information")
+        msg.setText("Successfully Classified")
+        msg.setIcon(QMessageBox.Information)
+        #msg.buttonClicked.connect(self.showKaryotype)
+        x = msg.exec_()
 
     def openWindow(self):
         self.w = DragWindow()
@@ -623,6 +636,8 @@ class Window(QWidget):
         self.dragButton.setText(_translate("MainWindow", "Edit"))
         self.processButton.setText(_translate("MainWindow", "Process"))
         self.viewButton.setText(_translate("MainWindow", "View"))
+        self.classifyButton.setText(_translate("MainWindow", "TSCM Classifier"))
+
 
         self.path.setText(_translate("MainWindow", "Path: "))
         self.actionOpen.setText(_translate("MainWindow", "Open"))
