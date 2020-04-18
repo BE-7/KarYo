@@ -24,6 +24,8 @@ def pre_process(imageDir):
 	vertical(imageDir)
 	resize(imageDir,"vertical")
 	lst,dict = smoothening(imageDir)
+	# resize(imageDir,"graph")
+
 	print(lst)
 	print(dict)
 	return dict

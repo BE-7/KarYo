@@ -4,11 +4,11 @@ import PIL
 import sys
 from PIL import Image, ImageDraw
 from concat import concat
-def row(lst,imagePath):
+def row(lst,target):
 
-	t = imagePath.split("/")
-	imageDir = t[0]+"/"+t[1]+"/"+t[2]+"/"+t[3]+"/" 
-	path = t[0]+"/"+t[1]+"/"+t[2]+"/"+t[3]+"/vertical"
+	# t = imagePath.split("/")
+	# imageDir = t[0]+"/"+t[1]+"/"+t[2]+"/"+t[3]+"/" 
+	path = target+"/Resized/vertical"
 	print("##########")
 	print(lst)
 	A = []
@@ -56,7 +56,7 @@ def row(lst,imagePath):
 		flag+=1
 
 
-	new_im.save(imageDir+'row1.jpg')
+	new_im.save(target+'/row1.jpg')
 
 
 
@@ -83,7 +83,7 @@ def row(lst,imagePath):
 			x_offset += im.size[0] + 50
 		flag+=1
 
-	new_im.save(imageDir+'row2.jpg')
+	new_im.save(target+'/row2.jpg')
 
 
 	#for image 3
@@ -109,7 +109,7 @@ def row(lst,imagePath):
 			x_offset += im.size[0] + 50
 		flag+=1
 
-	new_im.save(imageDir+'row3.jpg')
+	new_im.save(target+'/row3.jpg')
 
 
 	#for image 4
@@ -135,6 +135,6 @@ def row(lst,imagePath):
 		flag+=1
 
 
-	new_im.save(imageDir+'row4.jpg')
+	new_im.save(target+'/row4.jpg')
 
-	concat(imageDir)
+	concat(target)

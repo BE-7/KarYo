@@ -17,8 +17,10 @@ def smoothening(imageDir):
     name = imageDir+"/noise_removed/"
     filenames= os.listdir(name)
     # print(filenames)
-    if not os.path.exists(imageDir+"/graph/"):
-        os.mkdir(imageDir+"/graph/")
+    if not os.path.exists(imageDir+"/Resized/"):
+        os.mkdir(imageDir+"/Resized/")
+    if not os.path.exists(imageDir+"/Resized/graph/"):
+        os.mkdir(imageDir+"/Resized/graph/")
 
     for file in filenames:
         img = cv2.imread(name+file,0)
@@ -54,7 +56,7 @@ def smoothening(imageDir):
         plt.ylabel('pixels')
         plt.plot(xdata,ydata, "-r", label='original')
         plt.legend(loc="upper left")
-        plt.savefig(imageDir+"/graph/"+file)
+        plt.savefig(imageDir+"/Resized/graph/"+file)
         #plt.show()
 
         distance = 0
