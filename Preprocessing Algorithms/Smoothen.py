@@ -3,35 +3,26 @@
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
-#from scipy.interpolate import spline
 import math
 import matplotlib
 import os
 
-#import matplotlib.axes.Axes.legend
-#import matplotlib.pyplot.legend
 
 
 lst=[]
 dict={}
-dict2={}
 
-def smoothening(imageDir,imagePath):
+def smoothening(imageDir):
 
     name = imageDir+"/noise_removed/"
     filenames= os.listdir(name)
-    print(filenames)
-    # if not os.path.exists(imageDir+"/smoothened/"):
-    #     os.mkdir(imageDir+"/smoothened/")
+    # print(filenames)
     if not os.path.exists(imageDir+"/graph/"):
         os.mkdir(imageDir+"/graph/")
 
     for file in filenames:
-        # a = os.path.join(subdir,file)
-        # print(a)
         img = cv2.imread(name+file,0)
 
-        #img = cv2.imread(a)
         #img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
         height, width = img.shape

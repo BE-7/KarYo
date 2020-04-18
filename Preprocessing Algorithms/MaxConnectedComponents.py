@@ -17,27 +17,21 @@ def undesired_objects (image,file,imageDir):
 
     img2 = np.zeros(output.shape)
     img2[output == max_label] = 255
-    #cv2.imshow("Biggest component", img2)
-    #cv2.imwrite('max_conneced.jpg', img2)
     if not os.path.exists(imageDir+"/connectedComponents/"):
         os.mkdir(imageDir+"/connectedComponents/")
     cv2.imwrite(imageDir+"/connectedComponents/"+str(file), img2)
 
-    #cv2.imwrite("validation_result/"+directory+"/connectedComponents/"+str(file), img2)
 
-
-def maxCC(imageDir,imagePath):
+def maxCC(imageDir):
 
     name = imageDir+"/threshold/"
     filenames= os.listdir(name)
-    print(filenames)
+    # print(filenames)
     for file in filenames:
         img = cv2.imread(name+file,0)
-        #img = cv2.imread('cropped_threshold.jpg')
         width=img.shape[1]
         height=img.shape[0]
         dimensions=img.shape
-        #print(dimensions)
         threshold=35
 
         #img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)

@@ -1,3 +1,5 @@
+#Importing required packages
+
 from Threshold import threshold
 from MaxConnectedComponents import maxCC
 from Skeleton import skeleton
@@ -5,26 +7,26 @@ from Noise import noise
 from Smoothen import smoothening
 from to_original import to_original
 from tilt import vertical
-from resize2 import resize2
 from resize import resize
 
-def pre_process(imagePath):
+def pre_process(imageDir):
 
-	t = imagePath.split("/")
-	imageDir = t[0]+"/"+t[1]+"/"+t[2]+"/"+t[3]+"/"
-	print(imageDir)
-	resize(imageDir,imagePath)
-	threshold(imageDir,imagePath)
-	maxCC(imageDir,imagePath)
-	skeleton(imageDir,imagePath)
-	noise(imageDir,imagePath)
-	to_original(imageDir,imagePath)
-	vertical(imageDir,imagePath)
-	resize2(imageDir,imagePath)
-	lst,dict = smoothening(imageDir,imagePath)
+	threshold(imageDir)
+	resize(imageDir,"threshold")
+	maxCC(imageDir)
+	resize(imageDir,"connectedComponents")
+	skeleton(imageDir)
+	resize(imageDir,"skeleton")	
+	noise(imageDir)
+	resize(imageDir,"noise_removed")
+	to_original(imageDir)
+	resize(imageDir,"Original_after_max")
+	vertical(imageDir)
+	resize(imageDir,"vertical")
+	lst,dict = smoothening(imageDir)
 	print(lst)
 	print(dict)
-	#print("works")
 	return dict
 
-#pre_process("G:/Karyotyping/chromosome_data/original 32/original 32.jpg")
+#Uncomment the below line to test the module
+#pre_process("G:/Karyotyping/chromosome_data/original 32/original 32.jpg","G:/Karyotyping/chromosome_data/original 32")
