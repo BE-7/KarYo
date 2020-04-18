@@ -1,18 +1,43 @@
-from PyQt5.QtWidgets import QApplication, QWidget, QListWidget, QHBoxLayout, QListWidgetItem, QTableWidget, QVBoxLayout, QPushButton, QMenuBar, QMainWindow, QDialog, QLabel, QMessageBox
-from PyQt5 import QtCore, QtGui, QtWidgets
-import sys
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
-sys.path.insert(1, 'G:/Karyotyping/Preprocessing Algorithms')
-from row import row
+#Importing necessary packages
 import os
 from functools import partial
+import time
+import sys
+from PyQt5.QtWidgets import QApplication, QWidget, QListWidget, QHBoxLayout, QListWidgetItem, QTableWidget, QVBoxLayout, QPushButton, QMenuBar, QMainWindow, QDialog, QLabel, QMessageBox, QFileDialog, QFrame, QDesktopWidget, QScrollArea, QProgressBar
+from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
 
+#Get current working directory
+cwd = os.getcwd()
 
+#Importing from Preprocessing Algorithms
+sys.path.insert(1, cwd+'/Preprocessing Algorithms')
+from row import row
+from index import pre_process
+from resize import resize
+
+#Importing from RCNN_object_detection
+sys.path.insert(1, cwd+'/RCNN_object_detection')
+from Object_detection_image import detection
+
+#Importing from Classifier
+sys.path.insert(1, cwd+'/Classifier/v3')
+from classify import classify
+
+#Default Image to be Processed
+imagePath = cwd+"/chromosome_data/original 32/original 32.jpg"
+
+#Background Image
+currentImage = cwd+"/images/white_bg.jpg"
+
+target = ""
+
+#To display the Generated Karyotype
 class Window2(QMainWindow):              
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Window 2")
+        self.setWindowTitle("Generated Karyotype")
         
         global imagePath
         t = imagePath.split("/")
@@ -37,12 +62,30 @@ class Window2(QMainWindow):
         self.setFixedSize(pixmap.width(), pixmap.height())
         self.show()        
 
+##to be uncommented
+        # self.setWindowTitle("Generated Karyotype")
+        # global imagePath
+        # t = imagePath.split("/")
+        # imageName = t[-1]
+        # folderName = imageName.split(".")
+        # folderName = folderName[0]
+        # os.mkdir(cwd+"/chromosome_data/"+folderName)
+        # imageDir = cwd+"/chromosome_data/"+folderName+"/karyotype.jpg"
+        # self.central_widget = QWidget()               
+        # self.setCentralWidget(self.central_widget)    
+        # lay = QVBoxLayout(self.central_widget)
+        # label = QLabel(self)
+        # pixmap = QPixmap(imageDir)
+        # label.setPixmap(pixmap)
+        # self.resize(pixmap.width(), pixmap.height())
+        # lay.addWidget(label)
+        # self.setFixedSize(pixmap.width(), pixmap.height())
+        # self.show()
 
-
+#Interactive Drag and Drop Space to arrange the chromosomes
 class DragWindow(QWidget):
     def __init__(self):
         super().__init__()
-
         lst = ['chr_1', 'chr_2', 'chr_3', 'chr_4', 'chr_5', 'chr_6', 'chr_7', 'chr_8', 'chr_9', 'chr_10', 'chr_11', 'chr_12', 'chr_13', 'chr_14', 'chr_15', 'chr_16', 'chr_17', 'chr_18', 'chr_19', 'chr_20', 'chr_21', 'chr_22', 'chr_x', 'chr_y']
         #Predicted Dict
         #predicted = {'1.jpg': 'chr_1', '11.jpg': 'chr_4', '12.jpg': 'chr_8', '13.jpg': 'chr_x', '15.jpg': 'chr_8', '16.jpg': 'chr_4', '17.jpg': 'chr_16', '18.jpg': 'chr_15', '19.jpg': 'chr_16', '22.jpg': 'chr_16', '23.jpg': 'chr_15', '24.jpg': 'chr_16', '25.jpg': 'chr_4', '27.jpg': 'chr_1', '31.jpg': 'chr_14', '34.jpg': 'chr_13', '35.jpg': 'chr_20', '36.jpg': 'chr_20', '37.jpg': 'chr_13', '38.jpg': 'chr_16', '42.jpg': 'chr_x', '44.jpg': 'chr_16', '45.jpg': 'chr_16', '46.jpg': 'chr_19', '5.jpg': 'chr_17', '6.jpg': 'chr_16'}
@@ -221,26 +264,7 @@ class DragWindow(QWidget):
 
 
 
-#frame1.py
-#import threshold,preprocessing,max_cc,skeleton,smooth_length,noise_removal
-#from OtherWindow import Ui_OtherWindow
-#from drag import DragWindow
-from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import Qt, QTimer
-from PyQt5.QtWidgets import QFileDialog,QMainWindow,QFrame, QDesktopWidget, QApplication, QWidget, QHBoxLayout, QVBoxLayout, QScrollArea, QProgressBar
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
-import time
-imagePath="G:/Karyotyping/chromosome_data/original 32/original 32.jpg"
-currentImage = "./images/white_bg.jpg"
-import requests
-sys.path.insert(1, 'G:/Karyotyping/Preprocessing Algorithms')
-from index import pre_process
-import sys
-sys.path.insert(1, 'G:/Karyotyping/RCNN_object_detection')
-from Object_detection_image import detection
-sys.path.insert(1, 'G:/Karyotyping/Classifier/v3')
-from classify import classify
+
 
 
 predicted = {}
@@ -506,31 +530,29 @@ class Window(QWidget):
         self.w.show()
         #self.hide() 
 
-
+    #To open an image    
     def open_file(self):
         name = QFileDialog.getOpenFileName(self,"Open Image", './chromosome_data', "Image files (*.jpg *.png *.bmp)")
-        print("name",name)
-        #name, _ = QFileDialog.getOpenFileName(self, 'Open File', options=QFileDialog.DontUseNativeDialog)
+        #print("name ",name)
         global imagePath
         global currentImage
+        global target
+
         imagePath = name[0]
-        print(imagePath)
+        #print(imagePath)
         currentImage = imagePath
         pixmap = QtGui.QPixmap(imagePath)
+        temp = imagePath.split("/")
+        imageName = temp[-1]
+        folderName = imageName.split(".")
+        folderName = folderName[0]
+        target = cwd+"/chromosome_data/"+folderName
+        if not os.path.exists(target):
+        	os.mkdir(target)
         self.image.setPixmap(QtGui.QPixmap(pixmap))
         self.resize(pixmap.width(), pixmap.height())
-        #self.log_details.setText("File Opened")
         self.path.setText("Path: "+imagePath)
 
-
-    # def thresh(self):
-    #     global imagePath
-    #     print("okay",imagePath)
-    #     threshold.threshold(imagePath)
-    #     self.result.setPixmap(QtGui.QPixmap("images/cropped_threshold.jpg"))
-    #     imagePath = "images/cropped_threshold.jpg"
-    #     self.log_details.setText("Performed Threshold")
-    #     self.path.setText(imagePath)
 
     def display_preprocessed(self,folder):
         global imagePath
@@ -573,62 +595,34 @@ class Window(QWidget):
         itemsTextList =  [str(self.myListWidget_right.item(i).text()) for i in range(self.myListWidget_right.count())]
         print(itemsTextList)
 
-
-
-
-    # def max(self):
-    #     global imagePath
-    #     print("maxing",imagePath)
-    #     max_cc.cc(imagePath)
-    #     self.result.setPixmap(QtGui.QPixmap("images/maxcc.jpg"))
-    #     imagePath = "images/maxcc.jpg"
-    #     self.log_details.setText("Noise removal was performed")
-    #     self.path.setText(imagePath)
-
-    # def skeleton(self):
-    #     global imagePath
-    #     print("skeleton",imagePath)
-    #     skeleton.skeletonize(imagePath)
-    #     self.result.setPixmap(QtGui.QPixmap("images/skeleton_without_noise.jpg"))
-    #     imagePath = "images/skeleton_without_noise.jpg"
-    #     self.log_details.setText("Skeleton was made successfully")
-    #     self.path.setText(imagePath)
-
-    # def test(self):
-    #     global imagePath
-    #     print("test",imagePath)
-    #     noise_removal.nonoise(imagePath)
-    #     self.result.setPixmap(QtGui.QPixmap("images/skeleton_without_noise.jpg"))
-    #     imagePath = "images/skeleton_without_noise.jpg"
-
+    #To detect individual chromosomes using Faster RCNN    
     def detect(self):
+        
         global imagePath
-        # vbox = QVBoxLayout()
-        # self.progressBar = QProgressBar()
-        # vbox.addWidget(progressBar)
-        # self.setLayout(vbox)
-        detection(imagePath)
+        global target
+        detection(imagePath,target)
+        resize(target,"cropped")
         msg = QMessageBox()
         msg.setWindowTitle("Information")
         msg.setText("Successfully Detected")
         msg.setIcon(QMessageBox.Information)
-        #msg.buttonClicked.connect(self.showKaryotype)
         x = msg.exec_()
 
+    #To perform preprocessing steps on the detected chromosomes
     def process(self):
+
         global imagePath
+        global target
         global length_dict
         print("works")
-        len_dict = pre_process(imagePath)
+        len_dict = pre_process(target)
         length_dict = len_dict
         msg = QMessageBox()
         msg.setWindowTitle("Information")
         msg.setText("Successfully Processed")
         msg.setIcon(QMessageBox.Information)
-        #msg.buttonClicked.connect(self.showKaryotype)
         x = msg.exec_()
         
-
 
     def classify(self):
         global	imagePath
@@ -646,15 +640,7 @@ class Window(QWidget):
         msg.setIcon(QMessageBox.Information)
         #msg.buttonClicked.connect(self.showKaryotype)
         x = msg.exec_()
-
-    # def smoothing(self):
-    #     global imagePath
-    #     print("smooth",imagePath)
-    #     chromosome_length = smooth_length.smooth(imagePath)
-    #     self.result.setPixmap(QtGui.QPixmap("images/smooth.jpg"))
-    #     imagePath = "images/smooth.jpg"
-    #     self.log_details.setText("Smoothing was performed\n Length: "+str(chromosome_length))
-    #     self.path.setText(imagePath)
+        
 
     def openWindow(self):
         self.w = DragWindow()
